@@ -243,6 +243,10 @@ div.btn-white.active,
   margin-bottom: 40px;
 }
 
+.container-menu .btn.active {
+  background-color: var(--color-primary);
+}
+
 .card-item {
   height: 360px;
 }
