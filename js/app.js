@@ -101,40 +101,55 @@ cardapio.metodos = {
           item[0].qntd = qntdAtual;
           MEU_CARRINHO.push(item[0]);
         }
-        alert("Item adicionado ao carrinho!");
+
+        cardapio.metodos.mensagem("Item adicionado ao carrinho!", "green");
         $("#qntd-" + id).text(0);
+
+        cardapio.metodos.atualizarBadgeTotal();
       }
     }
+  },
+
+  atualizarBadgeTotal: () => {
+    var total = 0;
+
+    $.each(MEU_CARRINHO, (i, e) => {
+      total += e.qntd;
+    });
+
+    if (total > 0) {
+      $(".botao-carrinho").removeClass("hidden");
+      $(".container-total-carrinho").removeClass("hidden");
+    } else {
+      $(".botao-carrinho").addClass("hidden");
+    }
+
+    $(".badge-total-carrinho").html(total);
+  },
+
+  abrirCarrinho: (abrir) => {
+    if (abrir) {
+      $("#modalCarrinho").removeClass("hidden");
+    } else {
+      $("#modalCarrinho").addClass("hidden");
+    }
+  },
+
+  mensagem: (texto, cor = "red", tempo = 3500) => {
+    let id = Math.floor(Date.now() * Math.random()).toString(); //criando ID aleatório
+
+    let msg = `<div id="msg-${id}" class="animated fadeInDown toast ${cor}">${texto}</div>`;
+    $("#container-mensagens").append(msg);
+
+    setTimeout(() => {
+      $("#msg-" + id).removeClass("fadeInDown");
+      $("#msg-" + id).addClass("fadeOutUp");
+      setTimeout(() => {
+        $("#msg-" + id).remove();
+      }, 650);
+    }, tempo);
   },
 };
-
-/* gpt
-
-  adicionarAoCarrinho: (id) => {    
-    let qntdAtual = parseInt($("#qntd-" + id).text());
-
-    if (qntdAtual > 0) {
-      var ativo = $(".container-menu a.active").attr("id").split("menu-")[1];
-      let filtro = MENU[ativo];
-      let item = $.grep(filtro, (e) => e.id == id);
-
-      if (item.length > 0) {
-        let itemExistente = MEU_CARRINHO.find((e) => e.id == id);
-
-        if (itemExistente) {
-          itemExistente.qntd = (itemExistente.qntd || 1) + qntdAtual;
-        } else {
-          let novoItem = { ...item[0] }; // Clona o item
-          novoItem.qntd = qntdAtual; // Adiciona a quantidade
-          MEU_CARRINHO.push(novoItem);
-        }
-
-        console.log("Carrinho atualizado:", MEU_CARRINHO);
-        $("#qntd-" + id).text(0); // Zera o contador na tela
-      }
-    }
-  },
-*/
 
 cardapio.templates = {
   item: `
